@@ -3,46 +3,53 @@ import {data} from './mock'
 
 export default class App extends Component {
   state={
-    search: '',
+    search: 'id',
     list: data,
   }
   render() {
     const onSearch=(e)=>{
-      // this.setState({search: e.target.value})
       const newData= data.filter((value)=>{
-        let list=value.name.toLocaleLowerCase();
-        return list.includes(e.target.value.toLocaleLowerCase())
+        if(Number.isInteger(value[this.state.search])){
+          let list=value[this.state.search].toString().toLocaleLowerCase();
+          return list.includes(e.target.value.toLocaleLowerCase())
+        }else{
+          let list=value[this.state.search].toLocaleLowerCase();
+          return list.includes(e.target.value.toLocaleLowerCase())
+        }
       })
-      this.setState({list: newData})
+      this.setState({[e.target.list]: e.target.value, list: newData})
+    }
+    const onSelect=(e)=>{
+      this.setState({search: e.target.value})
     }
     return (
       <div className="wrapper">
-        <input  type="text" onChange={onSearch} />
-        <select name="" id="">
-          <option value="">id</option>
-          <option value="">name</option>
-          <option value="">status</option>
-        </select>
-        <table border='1' style={{borderCollapse: 'collapse', width: '400px'}}>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              this.state.list.map((value)=>(
-                <tr>
-                  <td>{value.id}</td>
-                  <td>{value.name}</td>
-                  <td>{value.status}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
+          <input  type="text" onChange={onSearch} />
+          <select name="" id="" onChange={onSelect}>
+            <option value="id">id</option>
+            <option value="name">name</option>
+            <option value="status">status</option>
+          </select>
+          <table border='1' style={{borderCollapse: 'collapse', width: '400px'}}>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                this.state.list.map((value)=>(
+                  <tr>
+                    <td>{value.id}</td>
+                    <td>{value.name}</td>
+                    <td>{value.status}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
       </div>
     )
   }
